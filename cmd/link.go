@@ -5,26 +5,21 @@ package cmd
 
 import (
 	"fmt"
-
 	"github.com/spf13/cobra"
 )
 
 // linkCmd represents the link command
 var linkCmd = &cobra.Command{
 	Use:   "link",
-	Short: "A brief description of your command",
-	Long: `A longer description that spans multiple lines and likely contains examples
-and usage of using your command. For example:
-
-Cobra is a CLI library for Go that empowers applications.
-This application is a tool to generate the needed files
-to quickly create a Cobra application.`,
+	Short: "Link domain to port",
+	Long:  `Link your localhost port to a actual domain , for example localhost:300, link 3000 to domain.com`,
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("link called")
+		fmt.Println("Your Args ")
 	},
 }
 
 func init() {
+	fmt.Println("Link called")
 	rootCmd.AddCommand(linkCmd)
 
 }
