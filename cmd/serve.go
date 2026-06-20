@@ -6,6 +6,9 @@ package cmd
 
 import (
 	"fmt"
+	"net/http"
+	"net/http/httputil"
+	"net/url"
 
 	"github.com/spf13/cobra"
 )
@@ -13,15 +16,21 @@ import (
 // serveCmd represents the serve command
 var serveCmd = &cobra.Command{
 	Use:   "serve",
-	Short: "A brief description of your command",
-	Long: `A longer description that spans multiple lines and likely contains examples
-and usage of using your command. For example:
+	Short: "Start the local reverse proxy",
+	RunE: func(cmd *cobra.Command, args []string) error {
+		target, err := url.Parse("http://localhost:5173")
+		if err != nil {
+			return err
+		}
 
-Cobra is a CLI library for Go that empowers applications.
-This application is a tool to generate the needed files
-to quickly create a Cobra application.`,
-	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("serve called")
+		proxy := httputil.NewSingleHostReverseProxy(target)
+		handler := http.NewServeMux()
+		handler.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+			proxy.ServeHTTP(w, r)
+		})
+
+		fmt.Println("Serving http://localhost:5173 on http://localhost:8080")
+		return http.ListenAndServe(":8080", handler)
 	},
 }
 

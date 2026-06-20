@@ -1,19 +1,7 @@
 package main
 
-import (
-	"net/http"
-	"net/http/httputil"
-	"net/url"
-)
+import "github.com/Ayush01010101/Custom-Domain-CLI.git/cmd"
 
 func main() {
-	target, _ := url.Parse("http://localhost:5173")
-
-	proxy := httputil.NewSingleHostReverseProxy(target)
-
-	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		proxy.ServeHTTP(w, r)
-	})
-
-	http.ListenAndServe(":8080", nil)
+	cmd.Execute()
 }
