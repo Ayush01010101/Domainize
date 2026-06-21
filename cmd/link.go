@@ -5,11 +5,11 @@ package cmd
 
 import (
 	"fmt"
+	proxy "github.com/Ayush01010101/Custom-Domain-CLI.git/src/functions/ReverseProxy"
+	hostfile "github.com/Ayush01010101/Custom-Domain-CLI.git/src/functions/UpdateHostsFile"
+	"github.com/spf13/cobra"
 	"regexp"
 	"strconv"
-
-	hostfile "github.com/Ayush01010101/Custom-Domain-CLI.git/src/functions"
-	"github.com/spf13/cobra"
 )
 
 var linkNumberRegex = regexp.MustCompile(`^\d{1,4}$`)
@@ -18,8 +18,8 @@ var linkDomainRegex = regexp.MustCompile(`(?i)^(?:[a-z0-9](?:[a-z0-9-]{0,61}[a-z
 // linkCmd represents the link command
 var linkCmd = &cobra.Command{
 	Use:   "link <number> <domain>",
-	Short: "Link domain to port",
-	Long:  `Link your localhost port to a actual domain , for example localhost:300, link 3000 to domain.com`,
+	Short: "Forward a local port to a domain",
+	Long:  `Forward traffic from a local port to a domain, for example link 8080 example.com forwards localhost:8080 to http://example.com.`,
 	Args: func(cmd *cobra.Command, args []string) error {
 		if len(args) != 2 {
 			return fmt.Errorf("link requires exactly 2 arguments: <number> <domain>")
@@ -39,6 +39,7 @@ var linkCmd = &cobra.Command{
 		fmt.Println("Your Args ", args)
 		port, _ := strconv.Atoi(args[0])
 		hostfile.UpdateHostsFile(port, args[1])
+		proxy.ReverseProxy(args[0])
 	},
 }
 
