@@ -4,6 +4,7 @@ Copyright © 2026 NAME HERE <EMAIL ADDRESS>
 package cmd
 
 import (
+	"fmt"
 	"github.com/Ayush01010101/Custom-Domain-CLI.git/src/utlities"
 	"github.com/spf13/cobra"
 )
@@ -20,7 +21,9 @@ This application is a tool to generate the needed files
 to quickly create a Cobra application.`,
 	Run: func(cmd *cobra.Command, args []string) {
 
-		utlities.Installmkcert()
+		result := utlities.Isconfigpresent()
+		fmt.Print("result", result)
+		// utlities.Installmkcert()
 	},
 }
 
