@@ -5,8 +5,8 @@ package cmd
 
 import (
 	"fmt"
-	proxy "github.com/Ayush01010101/Custom-Domain-CLI.git/src/functions/ReverseProxy"
-	hostfile "github.com/Ayush01010101/Custom-Domain-CLI.git/src/functions/UpdateHostsFile"
+	"github.com/Ayush01010101/Custom-Domain-CLI.git/src/functions/ReverseProxy"
+	"github.com/Ayush01010101/Custom-Domain-CLI.git/src/functions/UpdateHostsFile"
 	"github.com/spf13/cobra"
 	"regexp"
 	"strconv"
