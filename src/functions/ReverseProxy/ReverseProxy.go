@@ -42,7 +42,7 @@ func ReverseProxy(port string) {
 	if sudoUser := os.Getenv("SUDO_USER"); sudoUser != "" {
 		home = filepath.Join("/home", sudoUser)
 	}
-	certFile := filepath.Join(home, ".config/customcli/bin/promptshop.com.pem")
+	certFile := filepath.Join(home, ".config/domainize_cli/bin/promptshop.com.pem")
 	keyFile := filepath.Join(home, ".config/customcli/bin/promptshop.com-key.pem")
 
 	log.Fatal(server.ListenAndServeTLS(certFile, keyFile))
