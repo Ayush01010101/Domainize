@@ -16,19 +16,21 @@ func ReverseProxy(port string, domain string) {
 	log.Println("Proxy target:", target.String())
 	proxy := httputil.NewSingleHostReverseProxy(target)
 
-	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+	mux := http.NewServeMux()
+	mux.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		log.Println("Host:", r.Host)
 		proxy.ServeHTTP(w, r)
 	})
 
 	log.Println("Listening on :80")
-
-	// log.Fatal(http.ListenAndServe(":80", nil))
+	go func() {
+		log.Fatal(http.ListenAndServe(":80", mux))
+	}()
 
 	//port :443 for https and :80 for http
 	server := &http.Server{
 		Addr:    ":443",
-		Handler: nil,
+		Handler: mux,
 	}
 
 	log.Println("Listening on :443")
@@ -38,5 +40,5 @@ func ReverseProxy(port string, domain string) {
 		log.Fatal(err)
 	}
 
-	log.Fatal(server.ListenAndServeTLS(certFile, keyFile))
+	server.ListenAndServeTLS(certFile, keyFile)
 }
