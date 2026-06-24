@@ -6,6 +6,17 @@ import (
 	"path/filepath"
 )
 
+type Config struct {
+	Name   string                  `json:"name"`
+	Domain map[string]DomainConfig `json:"domain,omitempty"`
+}
+
+type DomainConfig struct {
+	HTTPS     bool             `json:"https"`
+	Port      int              `json:"port"`
+	Subdomain []map[int]string `json:"subdomain,omitempty"`
+}
+
 func SetupConfig() bool {
 
 	configDir, err := os.UserConfigDir()
@@ -14,11 +25,8 @@ func SetupConfig() bool {
 	}
 	configpath := filepath.Join(configDir, "domainize", "config.json")
 
-	// Some dummy config data to seed the file.
-	data := map[string]any{
-		"name":    "domainize",
-		"version": "1.0.0",
-		"domains": []string{},
+	data := Config{
+		Name: "domainize",
 	}
 
 	contents, err := json.MarshalIndent(data, "", "  ")
