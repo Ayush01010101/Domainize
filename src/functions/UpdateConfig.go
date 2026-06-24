@@ -2,21 +2,25 @@ package functions
 
 import (
 	"encoding/json"
-	"github.com/Ayush01010101/Custom-Domain-CLI.git/src/utlities"
 	"os"
 	"path/filepath"
+
+	"github.com/Ayush01010101/Custom-Domain-CLI.git/src/utlities"
 )
 
 func UpdateConfig(port int, domain string) {
-	configDir, err := os.UserConfigDir()
+	configPath, err := utlities.ConfigPath()
 	if err != nil {
 		panic(err)
 	}
-
-	configPath := filepath.Join(configDir, "domainize", "config.json")
+	if err := os.MkdirAll(filepath.Dir(configPath), 0o755); err != nil {
+		panic(err)
+	}
 
 	contents, err := os.ReadFile(configPath)
-	if err != nil {
+	if os.IsNotExist(err) {
+		contents = []byte(`{"name":"domainize"}`)
+	} else if err != nil {
 		panic(err)
 	}
 

@@ -5,10 +5,11 @@ package cmd
 
 import (
 	"fmt"
-	"github.com/Ayush01010101/Custom-Domain-CLI.git/src/functions"
-	"github.com/spf13/cobra"
 	"regexp"
 	"strconv"
+
+	"github.com/Ayush01010101/Custom-Domain-CLI.git/src/functions"
+	"github.com/spf13/cobra"
 )
 
 var linkNumberRegex = regexp.MustCompile(`^\d{1,4}$`)

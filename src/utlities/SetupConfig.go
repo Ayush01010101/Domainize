@@ -21,11 +21,10 @@ type DomainConfig struct {
 func SetupConfig() bool {
 
 	fmt.Println("setup config called")
-	configDir, err := os.UserConfigDir()
+	configpath, err := ConfigPath()
 	if err != nil {
 		panic(err)
 	}
-	configpath := filepath.Join(configDir, "domainize", "config.json")
 	if err := os.MkdirAll(filepath.Dir(configpath), 0o755); err != nil {
 		panic(err)
 	}

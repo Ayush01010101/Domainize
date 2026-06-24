@@ -29,17 +29,12 @@ func Installmkcert() {
 		panic("unsupported operating system: " + runtime.GOOS)
 	}
 
-	// os.UserConfigDir() resolves the OS-appropriate config root:
-	//   Linux:   $XDG_CONFIG_HOME or $HOME/.config
-	//   macOS:   $HOME/Library/Application Support
-	//   Windows: %AppData% (C:\Users\<user>\AppData\Roaming)
-
-	configDir, err := os.UserConfigDir()
-	fmt.Println("config directory", configDir)
+	configpath, err := ConfigPath()
 	if err != nil {
 		panic(err)
 	}
-	mkcertDir := filepath.Join(configDir, "domainize", "bin")
+	fmt.Println("config directory", filepath.Dir(configpath))
+	mkcertDir := filepath.Join(filepath.Dir(configpath), "bin")
 	mkcertPath := filepath.Join(mkcertDir, mkcertBinary)
 
 	resp, err := http.Get(downloadURL)

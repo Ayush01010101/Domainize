@@ -7,12 +7,12 @@ import (
 
 func Isconfigpresent() bool {
 
-	configDir, err := os.UserConfigDir()
+	configpath, err := ConfigPath()
 	if err != nil {
 		panic(err)
 	}
 
-	mkcertDir := filepath.Join(configDir, "domainize", "bin")
+	mkcertDir := filepath.Join(filepath.Dir(configpath), "bin")
 	_, configpatherror := os.Stat(mkcertDir)
 
 	if configpatherror != nil {
