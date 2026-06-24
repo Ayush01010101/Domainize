@@ -2,6 +2,7 @@ package utlities
 
 import (
 	"encoding/json"
+	"fmt"
 	"os"
 	"path/filepath"
 )
@@ -19,11 +20,15 @@ type DomainConfig struct {
 
 func SetupConfig() bool {
 
+	fmt.Println("setup config called")
 	configDir, err := os.UserConfigDir()
 	if err != nil {
 		panic(err)
 	}
 	configpath := filepath.Join(configDir, "domainize", "config.json")
+	if err := os.MkdirAll(filepath.Dir(configpath), 0o755); err != nil {
+		panic(err)
+	}
 
 	data := Config{
 		Name: "domainize",

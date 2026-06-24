@@ -1,4 +1,4 @@
-package hostfile
+package functions
 
 import (
 	"fmt"

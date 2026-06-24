@@ -10,6 +10,7 @@ import (
 )
 
 func Installmkcert() {
+	fmt.Println("installmkcert called")
 	var downloadURL string
 	mkcertBinary := "mkcert"
 

@@ -5,8 +5,7 @@ package cmd
 
 import (
 	"fmt"
-	"github.com/Ayush01010101/Custom-Domain-CLI.git/src/functions/ReverseProxy"
-	"github.com/Ayush01010101/Custom-Domain-CLI.git/src/functions/UpdateHostsFile"
+	"github.com/Ayush01010101/Custom-Domain-CLI.git/src/functions"
 	"github.com/spf13/cobra"
 	"regexp"
 	"strconv"
@@ -38,8 +37,10 @@ var linkCmd = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 		fmt.Println("Your Args ", args)
 		port, _ := strconv.Atoi(args[0])
-		hostfile.UpdateHostsFile(port, args[1])
-		proxy.ReverseProxy(args[0])
+		functions.UpdateConfig(port, args[1])
+		functions.UpdateHostsFile(port, args[1])
+		functions.ReverseProxy(args[0])
+
 	},
 }
 
