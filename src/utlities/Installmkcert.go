@@ -32,6 +32,7 @@ func Installmkcert() {
 	//   Linux:   $XDG_CONFIG_HOME or $HOME/.config
 	//   macOS:   $HOME/Library/Application Support
 	//   Windows: %AppData% (C:\Users\<user>\AppData\Roaming)
+
 	configDir, err := os.UserConfigDir()
 	fmt.Println("config directory", configDir)
 	if err != nil {
