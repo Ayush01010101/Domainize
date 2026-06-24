@@ -1,16 +1,18 @@
 package functions
 
 import (
+	"fmt"
 	"log"
 	"net/http"
 	"net/http/httputil"
 	"net/url"
-	"os"
-	"path/filepath"
+
+	"github.com/Ayush01010101/Custom-Domain-CLI.git/src/utlities"
 )
 
-func ReverseProxy(port string) {
-	target, _ := url.Parse("http://127.0.0.1:5500")
+func ReverseProxy(port string, domain string) {
+
+	target, _ := url.Parse(fmt.Sprintf("http://127.0.0.1:%s", port))
 	log.Println("Proxy target:", target.String())
 	proxy := httputil.NewSingleHostReverseProxy(target)
 
@@ -31,19 +33,10 @@ func ReverseProxy(port string) {
 
 	log.Println("Listening on :443")
 
-	home := os.Getenv("HOME")
-	if home == "" {
-		var err error
-		home, err = os.UserHomeDir()
-		if err != nil {
-			log.Fatal("could not resolve home directory:", err)
-		}
+	certFile, keyFile, err := utlities.GetSSL_TLS_keys(domain)
+	if err != nil {
+		log.Fatal(err)
 	}
-	if sudoUser := os.Getenv("SUDO_USER"); sudoUser != "" {
-		home = filepath.Join("/home", sudoUser)
-	}
-	certFile := filepath.Join(home, ".config/domainize/promptshop.com.pem")
-	keyFile := filepath.Join(home, ".config/domainize/promptshop.com-key.pem")
 
 	log.Fatal(server.ListenAndServeTLS(certFile, keyFile))
 }

@@ -1,16 +1,16 @@
 package utlities
 
 import (
-	"fmt"
 	"io"
 	"net/http"
 	"os"
 	"path/filepath"
 	"runtime"
+
+	"github.com/pterm/pterm"
 )
 
 func Installmkcert() {
-	fmt.Println("installmkcert called")
 	var downloadURL string
 	mkcertBinary := "mkcert"
 
@@ -33,7 +33,7 @@ func Installmkcert() {
 	if err != nil {
 		panic(err)
 	}
-	fmt.Println("config directory", filepath.Dir(configpath))
+
 	mkcertDir := filepath.Join(filepath.Dir(configpath), "bin")
 	mkcertPath := filepath.Join(mkcertDir, mkcertBinary)
 
@@ -55,11 +55,50 @@ func Installmkcert() {
 	if err != nil {
 		panic(err)
 	}
-	defer out.Close()
 
-	if _, err := io.Copy(out, resp.Body); err != nil {
+	// Stream the download to disk. When the server reports a size we drive a
+	// real progress bar from it; otherwise fall back to an indeterminate spinner.
+	if resp.ContentLength > 0 {
+		bar, _ := pterm.DefaultProgressbar.
+			WithTotal(int(resp.ContentLength)).
+			WithTitle("Downloading mkcert").
+			Start()
+
+		if _, err := io.Copy(out, io.TeeReader(resp.Body, &progressWriter{bar: bar})); err != nil {
+			bar.Stop()
+			panic(err)
+		}
+		bar.Stop()
+	} else {
+		spinner, _ := pterm.DefaultSpinner.Start("Downloading mkcert")
+		if _, err := io.Copy(out, resp.Body); err != nil {
+			spinner.Fail("Download failed")
+			panic(err)
+		}
+		spinner.Success("Downloaded mkcert")
+	}
+
+	if err := out.Close(); err != nil {
 		panic(err)
 	}
 
-	os.Chmod(mkcertPath, 0755)
+	if err := os.Chmod(mkcertPath, 0755); err != nil {
+		panic(err)
+	}
+
+	if output, err := runMkcert(filepath.Dir(configpath), mkcertPath, "-install"); err != nil {
+		panic("failed to install mkcert local CA: " + string(output))
+	}
+}
+
+// progressWriter advances a pterm progress bar by the number of bytes streamed
+// through it. It discards the data itself, so it's meant to sit behind an
+// io.TeeReader that already writes the real bytes to disk.
+type progressWriter struct {
+	bar *pterm.ProgressbarPrinter
+}
+
+func (w *progressWriter) Write(p []byte) (int, error) {
+	w.bar.Add(len(p))
+	return len(p), nil
 }

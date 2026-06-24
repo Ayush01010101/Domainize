@@ -40,7 +40,7 @@ var linkCmd = &cobra.Command{
 		port, _ := strconv.Atoi(args[0])
 		functions.UpdateConfig(port, args[1])
 		functions.UpdateHostsFile(port, args[1])
-		functions.ReverseProxy(args[0])
+		functions.ReverseProxy(args[0], args[1])
 
 	},
 }

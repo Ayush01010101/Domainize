@@ -18,6 +18,5 @@ func ConfigPath() (string, error) {
 	if err != nil {
 		return "", err
 	}
-
 	return filepath.Join(configDir, "domainize", "config.json"), nil
 }

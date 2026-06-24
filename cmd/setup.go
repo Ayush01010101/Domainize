@@ -4,8 +4,8 @@ Copyright © 2026 NAME HERE <EMAIL ADDRESS>
 package cmd
 
 import (
-	"fmt"
 	"github.com/Ayush01010101/Custom-Domain-CLI.git/src/utlities"
+	"github.com/pterm/pterm"
 	"github.com/spf13/cobra"
 )
 
@@ -23,21 +23,25 @@ This application is a tool to generate the needed files
 to quickly create a Cobra application.`,
 	Run: func(cmd *cobra.Command, args []string) {
 		config := utlities.Isconfigpresent()
+
+		if config && !reset {
+			pterm.Warning.Println("Config already present. Run 'setup --reset' for a clean installation.")
+			return
+		}
+
+		pterm.DefaultSection.Println("Setting up domainize")
+
 		if reset {
-			fmt.Print("reset is called")
-			utlities.SetupConfig()
-			utlities.Installmkcert()
-			return
-
-		}
-		if config {
-			fmt.Print("config is present run --reset to clean installation ")
-			return
+			pterm.Info.Println("Resetting existing configuration...")
 		}
 
+		spinner, _ := pterm.DefaultSpinner.Start("Writing config file")
 		utlities.SetupConfig()
+		spinner.Success("Config file ready")
+
 		utlities.Installmkcert()
-		fmt.Print("setup is done")
+
+		pterm.Success.Println("Setup complete!")
 	},
 }
 
