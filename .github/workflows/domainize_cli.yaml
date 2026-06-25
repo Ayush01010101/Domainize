@@ -28,5 +28,5 @@ jobs:
 
       - run: ./domainize_cli setup
 
-      - run: ./domainize_cli link 5500 ayush.in
+      # - run: ./domainize_cli link 5500 ayush.in
 
