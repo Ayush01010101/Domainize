@@ -6,7 +6,15 @@ import (
 	"os/exec"
 	"os/user"
 	"path/filepath"
+	"runtime"
 )
+
+func mkcertBinaryName() string {
+	if runtime.GOOS == "windows" {
+		return "mkcert.exe"
+	}
+	return "mkcert"
+}
 
 func GetSSL_TLS_keys(domain string) (string, string, error) {
 	configPath, err := ConfigPath()
@@ -15,7 +23,7 @@ func GetSSL_TLS_keys(domain string) (string, string, error) {
 	}
 
 	configDir := filepath.Dir(configPath)
-	mkcertPath := filepath.Join(configDir, "bin", "mkcert")
+	mkcertPath := filepath.Join(configDir, "bin", mkcertBinaryName())
 
 	output, err := runMkcert(configDir, mkcertPath, domain)
 	fmt.Print("output", string(output))

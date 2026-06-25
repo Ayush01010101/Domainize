@@ -3,14 +3,23 @@ package functions
 import (
 	"fmt"
 	"os"
+	"runtime"
 	"strings"
 )
 
+func hostsFilePath() string {
+	if runtime.GOOS == "windows" {
+		return "C:\\Windows\\System32\\drivers\\etc\\hosts"
+	}
+	return "/etc/hosts"
+}
+
 func UpdateHostsFile(port int, domain string) {
 	entry := "127.0.0.1\t" + domain
+	hostsFile := hostsFilePath()
 
 	fmt.Println("now updaet the hosts file")
-	content, err := os.ReadFile("/etc/hosts")
+	content, err := os.ReadFile(hostsFile)
 	if err != nil {
 		panic(err)
 	}
@@ -21,7 +30,7 @@ func UpdateHostsFile(port int, domain string) {
 	}
 
 	f, err := os.OpenFile(
-		"/etc/hosts",
+		hostsFile,
 		os.O_APPEND|os.O_WRONLY,
 		0644,
 	)
