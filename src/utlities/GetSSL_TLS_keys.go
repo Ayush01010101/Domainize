@@ -23,6 +23,16 @@ func GetSSL_TLS_keys(domain string) (string, string, error) {
 	}
 
 	configDir := filepath.Dir(configPath)
+	certFile := filepath.Join(configDir, domain+".pem")
+	keyFile := filepath.Join(configDir, domain+"-key.pem")
+
+	// Check if PEM files already exist
+	if _, err := os.Stat(certFile); err == nil {
+		if _, err := os.Stat(keyFile); err == nil {
+			return certFile, keyFile, nil
+		}
+	}
+
 	mkcertPath := filepath.Join(configDir, "bin", mkcertBinaryName())
 
 	output, err := runMkcert(configDir, mkcertPath, domain)
@@ -30,9 +40,6 @@ func GetSSL_TLS_keys(domain string) (string, string, error) {
 	if err != nil {
 		return "", "", err
 	}
-
-	certFile := filepath.Join(configDir, domain+".pem")
-	keyFile := filepath.Join(configDir, domain+"-key.pem")
 
 	return certFile, keyFile, nil
 }
