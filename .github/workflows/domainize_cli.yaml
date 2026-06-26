@@ -28,5 +28,11 @@ jobs:
 
       - run: ./domainize_cli setup
 
-      - run: sudo ./domainize_cli link 5500 mycustomdomain.com
+      - name: Run link (Linux & macOS)
+        if: matrix.os != 'windows-latest'
+        run: sudo ./domainize_cli link 5500 mycustomdomain.com
+
+      - name: Run link (Windows)
+        if: matrix.os == 'windows-latest'
+        run: ./domainize_cli link 5500 mycustomdomain.com
 
