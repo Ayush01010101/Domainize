@@ -40,5 +40,5 @@ func ReverseProxy(port string, domain string) {
 		log.Fatal(err)
 	}
 
-	server.ListenAndServeTLS(certFile, keyFile)
+	log.Fatal(server.ListenAndServeTLS(certFile, keyFile))
 }

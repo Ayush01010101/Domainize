@@ -1,12 +1,14 @@
 /*
 Copyright © 2026 NAME HERE <EMAIL ADDRESS>
-
 */
 package cmd
 
 import (
 	"fmt"
+	"strconv"
 
+	"github.com/Ayush01010101/Custom-Domain-CLI.git/src/functions"
+	"github.com/Ayush01010101/Custom-Domain-CLI.git/src/utlities"
 	"github.com/spf13/cobra"
 )
 
@@ -22,19 +24,25 @@ This application is a tool to generate the needed files
 to quickly create a Cobra application.`,
 	Run: func(cmd *cobra.Command, args []string) {
 		fmt.Println("start called")
+
+		config, err := utlities.ReadConfig()
+		if err != nil {
+			fmt.Println("could not read config, run link first:", err)
+			return
+		}
+
+		if len(config.Domain) == 0 {
+			fmt.Println("no domain configured, run link first")
+			return
+		}
+
+		for domain, domainConfig := range config.Domain {
+			functions.ReverseProxy(strconv.Itoa(domainConfig.Port), domain)
+		}
 	},
 }
 
 func init() {
 	rootCmd.AddCommand(startCmd)
 
-	// Here you will define your flags and configuration settings.
-
-	// Cobra supports Persistent Flags which will work for this command
-	// and all subcommands, e.g.:
-	// startCmd.PersistentFlags().String("foo", "", "A help for foo")
-
-	// Cobra supports local flags which will only run when this command
-	// is called directly, e.g.:
-	// startCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
 }

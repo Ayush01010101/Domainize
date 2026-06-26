@@ -46,7 +46,6 @@ var linkCmd = &cobra.Command{
 
 		functions.UpdateConfig(port, args[1])
 		functions.UpdateHostsFile(port, args[1])
-		functions.ReverseProxy(args[0], args[1])
 
 	},
 }
