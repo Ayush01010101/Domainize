@@ -9,6 +9,7 @@ import (
 	"strconv"
 
 	"github.com/Ayush01010101/Custom-Domain-CLI.git/src/functions"
+	"github.com/Ayush01010101/Custom-Domain-CLI.git/src/utlities"
 	"github.com/spf13/cobra"
 )
 
@@ -38,6 +39,11 @@ var linkCmd = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 		fmt.Println("Your Args ", args)
 		port, _ := strconv.Atoi(args[0])
+
+		if !utlities.CheckDomainConfig() {
+			return
+		}
+
 		functions.UpdateConfig(port, args[1])
 		functions.UpdateHostsFile(port, args[1])
 		functions.ReverseProxy(args[0], args[1])
