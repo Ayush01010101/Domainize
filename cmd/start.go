@@ -15,13 +15,12 @@ import (
 // startCmd represents the start command
 var startCmd = &cobra.Command{
 	Use:   "start",
-	Short: "A brief description of your command",
-	Long: `A longer description that spans multiple lines and likely contains examples
-and usage of using your command. For example:
+	Short: "Start serving all linked domains",
+	Long: `Start the reverse proxy for every domain you have linked.
 
-Cobra is a CLI library for Go that empowers applications.
-This application is a tool to generate the needed files
-to quickly create a Cobra application.`,
+It reads your saved configuration and, for each linked domain, forwards
+traffic from the domain to its local port. Run "link" first to map a port
+to a domain, then run "start" to begin serving them.`,
 	Run: func(cmd *cobra.Command, args []string) {
 		fmt.Println("start called")
 

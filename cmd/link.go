@@ -40,8 +40,15 @@ var linkCmd = &cobra.Command{
 		fmt.Println("Your Args ", args)
 		port, _ := strconv.Atoi(args[0])
 
-		if !utlities.CheckDomainConfig() {
+		proceed, removed := utlities.CheckDomainConfig()
+		if !proceed {
 			return
+		}
+
+		// Drop the overwritten domains from the hosts file so we don't leave
+		// orphaned 127.0.0.1 entries behind.
+		for _, d := range removed {
+			functions.RemoveFromHostsFile(d)
 		}
 
 		functions.UpdateConfig(port, args[1])
