@@ -8,6 +8,8 @@
 
 version: 2
 
+project_name: domainize
+
 before:
   hooks:
     # You may remove this if you don't use go modules.
@@ -16,7 +18,8 @@ before:
     - go generate ./...
 
 builds:
-  - env:
+  - binary: domainize
+    env:
       - CGO_ENABLED=0
     goos:
       - linux
@@ -49,16 +52,21 @@ release:
   footer: >-
 
     ---
+
+    Released by [GoReleaser](https://github.com/goreleaser/goreleaser).
+
 brews:
   - name: domainize
-
     repository:
       owner: Ayush01010101
       name: homebrew-tap
-
+      branch: main
+      token: "{{ .Env.HOMEBREW_TAP_GITHUB_TOKEN }}"
     directory: Formula
-
     homepage: https://github.com/Ayush01010101/Domainize
-    description: Domain enumeration CLI
+    description: "Serve local dev servers under custom domains over HTTPS"
     license: MIT
-    Released by [GoReleaser](https://github.com/goreleaser/goreleaser).
+    install: |
+      bin.install "domainize"
+    test: |
+      system "#{bin}/domainize", "--help"
