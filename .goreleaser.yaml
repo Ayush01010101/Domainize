@@ -49,5 +49,16 @@ release:
   footer: >-
 
     ---
+brews:
+  - name: domainize
 
+    repository:
+      owner: Ayush01010101
+      name: homebrew-tap
+
+    directory: Formula
+
+    homepage: https://github.com/Ayush01010101/Domainize
+    description: Domain enumeration CLI
+    license: MIT
     Released by [GoReleaser](https://github.com/goreleaser/goreleaser).
